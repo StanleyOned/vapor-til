@@ -1,5 +1,5 @@
+import FluentPostgreSQL
 import Vapor
-import FluentSQLite
 
 final class Acronym: Codable {
     var id: Int?
@@ -13,5 +13,5 @@ final class Acronym: Codable {
 }
 
 extension Acronym: Migration {}
-extension Acronym: SQLiteModel {}
+extension Acronym: PostgreSQLModel {}
 extension Acronym: Content {}
