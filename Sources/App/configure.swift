@@ -40,6 +40,12 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     /// Configure migrations
     /// Tells which database to use for the models of Acronym
     var migrations = MigrationConfig()
+    migrations.add(model: User.self, database: .psql)
     migrations.add(model: Acronym.self, database: .psql)
     services.register(migrations)
+    
+    /// Add the Fluent commands to your CommandConfig. This adds both the revert command with the identifier revert and the migrate command with the identifier migrate. You use these strings to invoke the commands
+    var commandConfig = CommandConfig.default()
+    commandConfig.useFluentCommands()
+    services.register(commandConfig)
 }

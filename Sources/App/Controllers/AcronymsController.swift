@@ -22,6 +22,9 @@ struct AcronymsController: RouteCollection {
         acronymsRoutes.get("first", use: getFirstHandler)
         // GET Sorted Acronyms /api/acronyms/sorted
         acronymsRoutes.get("sorted", use: sortedHandler)
+        
+        // GET This connects an HTTP GET request to /api/acronyms/<ID>/user to getUserHandler(_:)
+        acronymsRoutes.get(Acronym.parameter, "user", use: getUserHandler)
     }
     // GET all acronyms
     func getAllHandler(_ req: Request) throws -> Future<[Acronym]> {
@@ -48,7 +51,7 @@ struct AcronymsController: RouteCollection {
                             
                             acronym.short = updatedAcronym.short
                             acronym.long = updatedAcronym.long
-                            
+                            acronym.userID = updatedAcronym.userID
                             return acronym.save(on: req)
         })
     }
@@ -89,5 +92,13 @@ struct AcronymsController: RouteCollection {
     // GET sorted Acronyms
     func sortedHandler(_ req: Request) throws -> Future<[Acronym]> {
         return Acronym.query(on: req).sort(\.short, .ascending).all()
+    }
+    
+    func getUserHandler(_ req: Request) throws -> Future<User> {
+        
+        return try req.parameters.next(Acronym.self).flatMap(to: User.self, { acronym in
+            // Use the new computed property created above to get the acronym’s owner
+            acronym.user.get(on: req)
+        })
     }
 }
