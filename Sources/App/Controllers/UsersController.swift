@@ -8,7 +8,7 @@ struct UsersController: RouteCollection {
         let usersRoute = router.grouped("api", "users")
         usersRoute.post(User.self, use: createHandler)
         
-        usersRoute.get(use: getAllHanlder)
+        usersRoute.get(use: getAllHandler)
         usersRoute.get(User.parameter, use: getHandler)
         usersRoute.get(User.parameter, "acronyms", use: getAcronymsHandler)
     }
@@ -19,7 +19,7 @@ struct UsersController: RouteCollection {
     }
     
     // GET all
-    func getAllHanlder(_ req: Request) throws -> Future<[User]> {
+    func getAllHandler(_ req: Request) throws -> Future<[User]> {
         return User.query(on: req).all()
     }
     // get with ID
