@@ -59,6 +59,22 @@ public func routes(_ router: Router) throws {
             .transform(to: HTTPStatus.noContent)
     }
     
+    handleSearchRequest(router: router)
+    handleFirstRequest(router: router)
+    sortAcronymRequest(router: router)
+}
+
+func sortAcronymRequest(router: Router) {
+    
+    router.get("api", "acronyms", "sorted") { req -> Future<[Acronym]> in
+        
+        return Acronym.query(on: req)
+            .sort(\.short, .ascending)
+            .all()
+    }
+}
+
+func handleSearchRequest(router: Router) {
     //SEARCH
     // Register a new route handler for /api/acronyms/search that returns
     // Future<[Acronym]>
@@ -73,10 +89,9 @@ public func routes(_ router: Router) throws {
             or.filter(\.long == searchTerm)
         }).all()
     }
-    handleFirstResult(router: router)
 }
 
-func handleFirstResult(router: Router) {
+func handleFirstRequest(router: Router) {
     // Register a new HTTP GET route for /api/acronyms/first that returns
     // Future<Acronym>.
     router.get("api", "acronyms", "first") { req -> Future<Acronym> in
