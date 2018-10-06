@@ -42,6 +42,8 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     var migrations = MigrationConfig()
     migrations.add(model: User.self, database: .psql)
     migrations.add(model: Acronym.self, database: .psql)
+    migrations.add(model: Category.self, database: .psql)
+    migrations.add(model: AcronymCategoryPivot.self, database: .psql)
     services.register(migrations)
     
     /// Add the Fluent commands to your CommandConfig. This adds both the revert command with the identifier revert and the migrate command with the identifier migrate. You use these strings to invoke the commands
